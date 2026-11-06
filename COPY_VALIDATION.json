@@ -1,0 +1,72 @@
+{
+  "created_on": "2026-11-06",
+  "status": "passed",
+  "total_size_limit_bytes": 1000000000,
+  "single_file_limit_bytes": 104857600,
+  "tracked_source_files_preserved": 159,
+  "missing_tracked_files": [],
+  "python_ast_files_passed": 86,
+  "core_file_hash_mismatches": [],
+  "modified_release_documents": [
+    ".gitignore",
+    "AGENTS.md",
+    "All_map.md",
+    "README.md"
+  ],
+  "copied_payload_files": 1728,
+  "identical_source_files": 1721,
+  "pytest": {
+    "tests": 19,
+    "failed_or_error": 0,
+    "result": "19 passed",
+    "scope": "config, text loader, Q&A parser; existing source environment dependencies with copied source"
+  },
+  "database_program_versions": {
+    "qdrant": "qdrant 1.19.2",
+    "postgres": "postgres (PostgreSQL) 17.11",
+    "initdb": "initdb (PostgreSQL) 17.11",
+    "pg_ctl": "pg_ctl (PostgreSQL) 17.11"
+  },
+  "powershell_parse_errors": 0,
+  "known_local_credential_matches": [],
+  "generic_scan_review": "Five test files contain dummy keys or local fixture DSNs; reviewed and preserved. No api.txt, .env, or source DSN copied.",
+  "delivered_files_ignored_by_git": [],
+  "excluded_local_paths_confirmed_ignored": [
+    "api.txt",
+    ".env",
+    ".env.production",
+    "data/postgres/session-url.txt",
+    ".venv/Scripts/python.exe",
+    "logs/app.log",
+    "reports/test.xml",
+    "tools/postgresql/postgresql-17.11-5.zip"
+  ],
+  "source_business_files_changed": false,
+  "source_memory_appended": true,
+  "github_upload_performed": false,
+  "github_official_rules_checked": "2026-11-06: browser 25 MiB, Git warning 50 MiB, Git blocking threshold 100 MiB; repository ideally <1 GB.",
+  "largest_files": [
+    {
+      "path": "tools/qdrant/qdrant.exe",
+      "bytes": 86529536
+    },
+    {
+      "path": "tools/postgresql/17.11-5/pgsql/bin/icudt67.dll",
+      "bytes": 28399104
+    },
+    {
+      "path": "tools/postgresql/17.11-5/pgsql/bin/postgres.exe",
+      "bytes": 9939456
+    },
+    {
+      "path": "tools/postgresql/17.11-5/pgsql/bin/wxmsw3211u_core_vc_x64_custom.dll",
+      "bytes": 8352768
+    },
+    {
+      "path": "tools/postgresql/17.11-5/pgsql/lib/wxmsw32u_core.lib",
+      "bytes": 7578300
+    }
+  ],
+  "total_files": 1730,
+  "total_size_bytes": 230402818
+}

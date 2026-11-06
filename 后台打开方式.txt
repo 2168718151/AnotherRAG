@@ -1,0 +1,57 @@
+$ErrorActionPreference = 'Stop'
+Set-Location -LiteralPath 'D:\text_Project\Another RAG'
+
+# PostgreSQL：使用现有集群，不删除数据
+$pgCtl = '.\tools\postgresql\17.11-5\pgsql\bin\pg_ctl.exe'
+& $pgCtl -D '.\data\postgres\cluster' status *> $null
+if ($LASTEXITCODE -ne 0) {
+    & $pgCtl -D '.\data\postgres\cluster' `
+        -l '.\logs\postgres_workbench.log' `
+        -o '-h 127.0.0.1 -p 55432' -w start
+    if ($LASTEXITCODE -ne 0) {
+        throw 'PostgreSQL 启动失败，请查看 logs\postgres_workbench.log；不要手动删除 postmaster.pid。'
+    }
+}
+
+# Qdrant
+$qdrantReady = $false
+try {
+    $null = Invoke-RestMethod 'http://127.0.0.1:6333/readyz' -TimeoutSec 2
+    $qdrantReady = $true
+} catch {}
+if (-not $qdrantReady) { .\scripts\run_qdrant.ps1 }
+
+# LM Studio 和 Embedding 模型
+$lmReady = $false
+try {
+    $null = Invoke-RestMethod 'http://127.0.0.1:1234/v1/models' -TimeoutSec 2
+    $lmReady = $true
+} catch {}
+if (-not $lmReady) {
+    lms server start -p 1234 --bind 127.0.0.1
+    if ($LASTEXITCODE -ne 0) { throw 'LM Studio 服务启动失败。' }
+}
+$loaded = (lms ps 2>&1 | Out-String)
+if ($loaded -notmatch 'text-embedding-qwen3-embedding-0\.6b') {
+    lms load text-embedding-qwen3-embedding-0.6b -y
+    if ($LASTEXITCODE -ne 0) { throw 'Embedding 模型加载失败。' }
+}
+
+# 会话连接信息从本机文件读取，不会写入 Git 或打印到屏幕
+$dsnFile = '.\data\postgres\session-url.txt'
+if (-not (Test-Path -LiteralPath $dsnFile)) { throw "缺少 PostgreSQL 连接文件：$dsnFile" }
+$env:STORY_RAG_POSTGRES_DSN = (Get-Content -LiteralPath $dsnFile -Raw -Encoding UTF8).Trim().Replace('postgresql+asyncpg://', 'postgresql://')
+$env:STORY_RAG_POSTGRES_SCHEMA = 'story_rag'
+
+# API 会在当前窗口运行；保持窗口打开
+.\scripts\run_api.ps1 -Database '牛客面试'
+
+
+CLI启动：
+Set-Location -LiteralPath 'D:\text_Project\Another RAG'
+
+$env:STORY_RAG_POSTGRES_DSN = (Get-Content -LiteralPath '.\data\postgres\session-url.txt' -Raw -Encoding UTF8).Trim().Replace('postgresql+asyncpg://', 'postgresql://')
+$env:STORY_RAG_POSTGRES_SCHEMA = 'story_rag'
+
+uv run story-rag shell
+

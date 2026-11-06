@@ -1,0 +1,6 @@
+.env
+.env.*
+*.local.json
+*.local.toml
+exports/
+*.fig

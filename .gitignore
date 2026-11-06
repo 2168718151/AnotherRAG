@@ -1,0 +1,48 @@
+api.txt
+.env
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+data/chroma/
+data/qdrant/
+.qdrant-initialized
+data/docstore/
+data/databases/
+# 35项修复的隔离pytest与真实知识链运行数据，保留在本地而不入Git。
+/data/p35*/
+/data/r35*/
+/data/qa_*/
+# 计算题仅检索补丁的隔离测试产物，保留本地。
+/data/cq_*/
+# data 下为本地数据库、测试实例与运行输入，不作为 Git 版本内容。
+/data/
+logs/
+reports/
+*.egg-info/
+dist/
+build/
+
+# GitHub 副本：只保留必要数据库运行组件，排除下载包、模型和本机凭据。
+.env.*
+!.env.example
+api.local.*
+*.pem
+*.key
+*.p12
+*.pfx
+/models/
+/snapshots/
+/none/
+/tools/qdrant/*
+!/tools/qdrant/qdrant.exe
+!/tools/qdrant/LICENSE
+!/tools/qdrant/NOTICE
+/tools/postgresql/*.zip
+/tools/postgresql/**/pgAdmin 4/
+/tools/postgresql/**/StackBuilder/
+/tools/postgresql/17.11-5/pgsql/doc/
+/tools/postgresql/**/include/

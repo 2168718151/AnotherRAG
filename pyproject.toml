@@ -1,0 +1,74 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "another-rag"
+version = "0.1.0"
+description = "A LlamaIndex-based bilingual Q&A TXT storage and retrieval service."
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+  "fastapi>=0.141,<1",
+  "httpx>=0.28,<1",
+  "jieba>=0.42.1,<1",
+  "llama-index-core>=0.14.25,<0.15",
+  "llama-index-embeddings-openai>=0.7,<0.8",
+  "llama-index-llms-openai-like>=0.8,<0.9",
+  "llama-index-postprocessor-sbert-rerank>=0.6,<0.7",
+  "llama-index-retrievers-bm25>=0.8,<0.9",
+  "llama-index-vector-stores-qdrant>=0.10.4,<0.11",
+  "psycopg[binary]>=3.2,<4",
+  "python-multipart>=0.0.20,<1",
+  "qdrant-client>=1.19,<2",
+  "sentence-transformers>=5.4,<7",
+  "torch==2.14.0+cu130; sys_platform == 'win32'",
+  "transformers>=4.51,<6",
+  "uvicorn[standard]>=0.38,<1",
+]
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cu130", marker = "sys_platform == 'win32'" }]
+
+[[tool.uv.index]]
+name = "pytorch-cu130"
+url = "https://download.pytorch.org/whl/cu130"
+explicit = true
+
+[dependency-groups]
+dev = [
+  "psutil>=7,<8",
+  "pytest>=9,<10",
+  "pytest-asyncio>=1,<2",
+  "ruff>=0.14,<1",
+]
+
+[project.scripts]
+story-rag = "story_rag.cli:main"
+story-rag-api = "story_rag.main:main"
+story-rag-eval = "story_rag.evaluation:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/story_rag"]
+
+[tool.hatch.build.targets.sdist]
+only-include = ["src", "scripts", "docs", "README.md", "pyproject.toml", "requirements.txt"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+markers = [
+  "unit: fast isolated tests",
+  "contract: interface and provider contract tests",
+  "integration: tests requiring LM Studio, DeepSeek, or the local reranker",
+  "evaluation: evaluation pipeline tests",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
